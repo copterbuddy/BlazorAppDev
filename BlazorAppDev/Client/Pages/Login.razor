@@ -1,5 +1,7 @@
 ﻿@page "/login"
 @using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations
 @inject IJSRuntime JSRuntime;
 
 <PageTitle>Login</PageTitle>
@@ -8,24 +10,47 @@
     <h1 class="display-3">Login</h1>
 </div>
 <hr />
-<form @onsubmit=HandleSubmit>
+<EditForm Model="@loginModel" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    @*<ValidationSummary />*@
+
     <div class="mb-3">
         <label for="email" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="email" @bind="email" placeholder="name@example.com">
+        <input type="text" class="form-control" id="email" @bind="@loginModel.Email" placeholder="name@example.com">
+        <ValidationMessage For="@(() => loginModel.Email)" />
     </div>
     <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" @bind="password" placeholder="Password">
+        <input type="password" class="form-control" id="password" @bind="@loginModel.Password" placeholder="Password">
+        <ValidationMessage For="@(() => loginModel.Password)" />
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
-</form>
+</EditForm>
 
 @code {
-    private string email { get; set; }
-    private string password { get; set; }
 
-    public async Task HandleSubmit()
+    private LoginModel loginModel = new LoginModel();
+
+    //public async Task HandleSubmit()
+    //{
+    //    await JSRuntime.InvokeVoidAsync("consoleLog", $"email: {loginModel.Email},password: {loginModel.Password}");
+    //}
+
+    private async Task HandleValidSubmit()
     {
-        await JSRuntime.InvokeVoidAsync("consoleLog", $"email: {email},password: {password}");
+
+        // Handle form submit when validation passed
+        var a = "a";
+    }
+
+    public class LoginModel
+    {
+        [Required(ErrorMessage = "Please enter email address my")]
+        [EmailAddress(ErrorMessage = "Invalid email address my")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "Please enter password my")]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters my")]
+        public string Password { get; set; }
     }
 }
