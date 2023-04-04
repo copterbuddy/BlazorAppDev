@@ -1,4 +1,6 @@
 using BlazorAppDev.Client;
+using BlazorAppDev.Shared.ValidatorModels;
+using FluentValidation;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 

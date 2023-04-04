@@ -3,6 +3,8 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel.DataAnnotations
 @inject IJSRuntime JSRuntime;
+@using Blazored.FluentValidation
+@inject HttpClient Http
 
 <PageTitle>Login</PageTitle>
 
@@ -10,14 +12,16 @@
     <h1 class="display-3">Login</h1>
 </div>
 <hr />
-<EditForm Model="@loginModel" OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
-    @*<ValidationSummary />*@
+@*<EditForm Model="@loginModel" OnValidSubmit="@HandleValidSubmit">*@
+<EditForm Model="@loginModel" OnSubmit="@HandleValidSubmit">
+    @*<DataAnnotationsValidator />*@
+    <FluentValidationValidator @ref="_fluentValidationValidator" />
+    <ValidationSummary class="text-danger-email span.text-danger-emai ui.text-danger-email" />
 
     <div class="mb-3">
         <label for="email" class="form-label">Email address</label>
         <input type="text" class="form-control" id="email" @bind="@loginModel.Email" placeholder="name@example.com">
-        <ValidationMessage For="@(() => loginModel.Email)" />
+        <ValidationMessage For="@(() => loginModel.Email)" class="text-danger-email span.text-danger-emai ui.text-danger-email" />
     </div>
     <div class="mb-3">
         <label for="password" class="form-label">Password</label>
@@ -29,7 +33,9 @@
 
 @code {
 
+    private FluentValidationValidator? _fluentValidationValidator;
     private LoginModel loginModel = new LoginModel();
+    private LoginResponse loginResponse;
 
     //public async Task HandleSubmit()
     //{
@@ -39,18 +45,30 @@
     private async Task HandleValidSubmit()
     {
 
+        if (await _fluentValidationValidator!.ValidateAsync())
+        {
+            try
+            {
+                var result = await Http.PostAsJsonAsync<LoginModel>("User/Login", loginModel);
+                if (result.IsSuccessStatusCode)
+                {
+                    loginResponse = await result.Content.ReadFromJsonAsync<LoginResponse>();
+                    if (loginResponse is not null)
+                    {
+                        Console.WriteLine("token is : " + loginResponse.Token);
+                    }
+                    
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("error is : " + e);
+                throw;
+            }
+        }
+
         // Handle form submit when validation passed
-        var a = "a";
     }
 
-    public class LoginModel
-    {
-        [Required(ErrorMessage = "Please enter email address my")]
-        [EmailAddress(ErrorMessage = "Invalid email address my")]
-        public string Email { get; set; }
-
-        [Required(ErrorMessage = "Please enter password my")]
-        [MinLength(8, ErrorMessage = "Password must be at least 8 characters my")]
-        public string Password { get; set; }
-    }
 }
