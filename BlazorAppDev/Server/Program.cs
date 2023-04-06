@@ -1,7 +1,9 @@
 global using BlazorAppDev.Shared.Models;
-
+using BlazorAppDev.Server.Repositories.MyDb;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -17,6 +19,8 @@ namespace BlazorAppDev
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+
+            builder.Services.AddDbContext<MyDb>();
 
             builder.Services.AddAuthorization();
             builder.Services.AddAuthentication(options =>
