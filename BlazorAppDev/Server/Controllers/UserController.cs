@@ -1,5 +1,6 @@
-﻿using BlazorAppDev.Shared;
-using BlazorAppDev.Shared.Models.DTO;
+﻿using BlazorAppDev.Server.Services.Implements;
+using BlazorAppDev.Server.Services.Interfaces;
+using BlazorAppDev.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -16,11 +17,13 @@ namespace BlazorAppDev.Server.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;
 
-        public UserController(ILogger<UserController> logger, IConfiguration configuration)
+        public UserController(ILogger<UserController> logger, IConfiguration configuration,IUserService userServce)
         {
             _logger = logger;
             _configuration = configuration;
+            _userService = userServce;
         }
 
         [HttpGet("Greeting")]
@@ -31,8 +34,32 @@ namespace BlazorAppDev.Server.Controllers
             return Ok($"Service Running On {_configuration.GetValue<string>("ASPNETCORE_ENVIRONMENT")}");
         }
 
+        [HttpPost("Register")]
+        public IActionResult Register([FromBody]RegisterRequest request)
+        {
+            try
+            {
+                if (request.Email is null ||
+                    request.Password is null ||
+                    request.ConfirmPassword is null ||
+                    request.Password != request.ConfirmPassword)
+                {
+                    return Unauthorized();
+                }
+
+                var result = _userService.Register(request);
+
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e);
+            }
+        }
+
         [HttpPost("Login")]
-        public IActionResult Login([FromBody]LoginModel loginModel)
+        public IActionResult Login([FromBody]LoginRequest loginModel)
         {
             try
             {

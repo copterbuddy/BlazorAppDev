@@ -4,17 +4,16 @@ using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace BlazorAppDev.Server.Repositories.MyDb
 {
-    public class MyDb : DbContext
+    public class MyDbContext : DbContext
     {
         private readonly IConfiguration _configuration;
-        public MyDb(DbContextOptions<MyDb> options, IConfiguration configuration) : base(options)
+        public MyDbContext(DbContextOptions<MyDbContext> options, IConfiguration configuration) : base(options)
         {
             _configuration = configuration;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //string connectionString = _configuration.GetConnectionString("DefaultConnection");
             string connectionString = _configuration.GetValue<string>("ConnectionStrings_DefaultConnection");
             optionsBuilder.UseSqlServer(connectionString);
         }
@@ -23,9 +22,9 @@ namespace BlazorAppDev.Server.Repositories.MyDb
         {
             modelBuilder.Entity<UserDetail>()
                 .HasKey(p => new { p.Id, p.Email });
-            //modelBuilder.Entity<UserDetail>()
-            //    .Property(p => p.Id)
-            //    .ValueGeneratedOnAdd();
+            modelBuilder.Entity<UserDetail>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
             modelBuilder.Entity<UserDetail>()
                 .Property(p => p.CreateDate)
                 .ValueGeneratedOnAdd();
@@ -39,6 +38,6 @@ namespace BlazorAppDev.Server.Repositories.MyDb
             //    );
         }
 
-        public DbSet<UserDetail> UserDetails { get; set; }
+        public DbSet<UserDetail> UserDetail { get; set; }
     }
 }

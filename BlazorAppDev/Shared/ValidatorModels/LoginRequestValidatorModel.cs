@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace BlazorAppDev.Shared.ValidatorModels
 {
-    public class LoginValidatorModel : AbstractValidator<LoginModel>
+    public class LoginRequestValidatorModel : AbstractValidator<LoginRequest>
     {
-        public LoginValidatorModel() {
+        public LoginRequestValidatorModel() {
             RuleFor(x => x.Email)
                 .NotEmpty()
                 .WithMessage("Please enter Email Address")

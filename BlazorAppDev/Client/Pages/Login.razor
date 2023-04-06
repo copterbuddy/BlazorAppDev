@@ -2,10 +2,10 @@
 @using Microsoft.JSInterop
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel.DataAnnotations
-@inject IJSRuntime JSRuntime;
 @using Blazored.FluentValidation
-@inject HttpClient Http
 @using System.Security.Claims
+@inject IJSRuntime JSRuntime;
+@inject HttpClient Http
 
 <PageTitle>Login</PageTitle>
 
@@ -14,20 +14,20 @@
 </div>
 <hr />
 @*<EditForm Model="@loginModel" OnValidSubmit="@HandleValidSubmit">*@
-<EditForm Model="@loginModel" OnSubmit="@HandleValidSubmit">
+<EditForm Model="@req" OnSubmit="@HandleValidSubmit">
     @*<DataAnnotationsValidator />*@
     <FluentValidationValidator @ref="_fluentValidationValidator" />
-    <ValidationSummary class="text-danger-email span.text-danger-emai ui.text-danger-email" />
+    <ValidationSummary class="text-danger-email span.text-danger-email ui.text-danger-email" />
 
     <div class="mb-3">
         <label for="email" class="form-label">Email address</label>
-        <input type="text" class="form-control" id="email" @bind="@loginModel.Email" placeholder="name@example.com">
-        <ValidationMessage For="@(() => loginModel.Email)" class="text-danger-email span.text-danger-emai ui.text-danger-email" />
+        <input type="text" class="form-control" id="email" @bind="@req.Email" placeholder="name@example.com">
+        <ValidationMessage For="@(() => req.Email)" class="text-danger-email span.text-danger-emai ui.text-danger-email" />
     </div>
     <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" @bind="@loginModel.Password" placeholder="Password">
-        <ValidationMessage For="@(() => loginModel.Password)" />
+        <input type="password" class="form-control" id="password" @bind="@req.Password" placeholder="Password">
+        <ValidationMessage For="@(() => req.Password)" />
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
 </EditForm>
@@ -44,8 +44,8 @@
 @code {
 
     private FluentValidationValidator? _fluentValidationValidator;
-    private LoginModel loginModel = new LoginModel();
-    private LoginResponse loginResponse;
+    private LoginRequest req = new LoginRequest();
+    private LoginResponse res;
 
     //public async Task HandleSubmit()
     //{
@@ -59,13 +59,13 @@
         {
             try
             {
-                var result = await Http.PostAsJsonAsync<LoginModel>("User/Login", loginModel);
+                var result = await Http.PostAsJsonAsync<LoginRequest>("User/Login", req);
                 if (result.IsSuccessStatusCode)
                 {
-                    loginResponse = await result.Content.ReadFromJsonAsync<LoginResponse>();
-                    if (loginResponse is not null)
+                    res = await result.Content.ReadFromJsonAsync<LoginResponse>();
+                    if (res is not null)
                     {
-                        Console.WriteLine("token is : " + loginResponse.Token);
+                        Console.WriteLine("token is : " + res.Token);
                     }
                     
                 }

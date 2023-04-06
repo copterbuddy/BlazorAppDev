@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorAppDev.Shared.Models.DTO
+namespace BlazorAppDev.Shared.Models
 {
-    public class LoginResponse
+    public class RegisterResponse
     {
-        public string Token { get; set; } = string.Empty;
+        public bool Result;
     }
 }
