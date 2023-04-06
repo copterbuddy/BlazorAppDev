@@ -5,6 +5,7 @@
 @inject IJSRuntime JSRuntime;
 @using Blazored.FluentValidation
 @inject HttpClient Http
+@using System.Security.Claims
 
 <PageTitle>Login</PageTitle>
 
@@ -30,6 +31,15 @@
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
 </EditForm>
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        The user: @context.User.FindFirst(ClaimTypes.Name).Value is authorized
+    </Authorized>
+    <NotAuthorized>
+        The User is not authorized
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
 
