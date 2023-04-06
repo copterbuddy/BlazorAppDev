@@ -19,6 +19,7 @@ namespace BlazorAppDev.Server.Repositories.Implements
                 UserDetail user = new()
                 {
                     Email = Email,
+                    Name = Email,
                     Password = Password,
                 };
                 await _myDb.AddAsync(user);
@@ -30,5 +31,6 @@ namespace BlazorAppDev.Server.Repositories.Implements
                 throw e;
             }
         }
+
     }
 }

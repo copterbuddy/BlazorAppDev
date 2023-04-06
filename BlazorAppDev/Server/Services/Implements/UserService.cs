@@ -1,4 +1,5 @@
 ﻿using BlazorAppDev.Server.Repositories.Interfaces;
+using BlazorAppDev.Server.Repositories.MyDb;
 using BlazorAppDev.Server.Services.Interfaces;
 
 namespace BlazorAppDev.Server.Services.Implements
@@ -6,11 +7,13 @@ namespace BlazorAppDev.Server.Services.Implements
     public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
+        public MyDbContext myDbContext { get; }
 
         public UserService(IUserRepository userRepository)
         {
             this.userRepository = userRepository;
         }
+
 
         public async Task<bool> Register(RegisterRequest request)
         {
@@ -34,5 +37,6 @@ namespace BlazorAppDev.Server.Services.Implements
                 throw e;
             }
         }
+
     }
 }

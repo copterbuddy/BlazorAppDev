@@ -24,18 +24,16 @@ namespace BlazorAppDev.Server.Repositories.MyDb
                 .HasKey(p => new { p.Id, p.Email });
             modelBuilder.Entity<UserDetail>()
                 .Property(p => p.Id)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedOnAdd()
+                .HasDefaultValue(Guid.NewGuid());
             modelBuilder.Entity<UserDetail>()
                 .Property(p => p.CreateDate)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedOnAdd()
+                .HasDefaultValue(DateTime.Now);
             modelBuilder.Entity<UserDetail>()
                 .Property(a => a.LastUpdated)
-                .ValueGeneratedOnAddOrUpdate();
-
-            //modelBuilder.Entity<UserDetail>().HasData(
-            //    new UserDetail { Email = "test1@test.com", Password = "1234" },
-            //    new UserDetail { Email = "test2@test.com", Password = "1234" }
-            //    );
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValue(DateTime.Now);
         }
 
         public DbSet<UserDetail> UserDetail { get; set; }

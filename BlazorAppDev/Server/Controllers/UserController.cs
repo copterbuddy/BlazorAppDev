@@ -35,7 +35,7 @@ namespace BlazorAppDev.Server.Controllers
         }
 
         [HttpPost("Register")]
-        public IActionResult Register([FromBody]RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody]RegisterRequest request)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace BlazorAppDev.Server.Controllers
                     return Unauthorized();
                 }
 
-                var result = _userService.Register(request);
+                var result = await _userService.Register(request);
 
                 return Ok(result);
             }
