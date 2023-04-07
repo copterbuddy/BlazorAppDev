@@ -24,10 +24,10 @@ namespace BlazorAppDev
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
-            //string connectionString = builder.Configuration.GetValue<string>("ConnectionStrings_DefaultConnection");
-            //builder.Services.AddDbContext<MyDbContext>(options =>
-            //options.UseSqlServer(connectionString));
-            builder.Services.AddDbContext<MyDbContext>();
+            string connectionString = builder.Configuration.GetValue<string>("ConnectionStrings_DefaultConnection");
+            builder.Services.AddDbContext<MyDbContext>(options =>
+            options.UseSqlServer(connectionString));
+            //builder.Services.AddDbContext<MyDbContext>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 

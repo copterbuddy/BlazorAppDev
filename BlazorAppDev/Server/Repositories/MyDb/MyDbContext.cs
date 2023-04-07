@@ -12,11 +12,11 @@ namespace BlazorAppDev.Server.Repositories.MyDb
             _configuration = configuration;
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            string connectionString = _configuration.GetValue<string>("ConnectionStrings_DefaultConnection");
-            optionsBuilder.UseSqlServer(connectionString);
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    string connectionString = _configuration.GetValue<string>("ConnectionStrings_DefaultConnection");
+        //    optionsBuilder.UseSqlServer(connectionString);
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
