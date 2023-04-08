@@ -12,12 +12,6 @@ namespace BlazorAppDev.Client.Pages
         [Inject] private HttpClient? _http { get; set; }
         private FluentValidationValidator? _validatorModel { get; set; }
 
-        //public Login(FluentValidationValidator? ValidatorModel, HttpClient? Http)
-        //{
-        //    _validatorModel = ValidatorModel;
-        //    _http = Http;
-        //}
-
         public LoginModel? Model = new LoginModel();
         public LoginRequest? req;
         public LoginResponse? res;

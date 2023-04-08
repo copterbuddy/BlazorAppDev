@@ -1,14 +1,10 @@
 ﻿using BlazorAppDev.Server.Repositories.MyDb.Model;
-using BlazorAppDev.Server.Services.Implements;
 using BlazorAppDev.Server.Services.Interfaces;
-using BlazorAppDev.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace BlazorAppDev.Server.Controllers
 {
@@ -50,7 +46,12 @@ namespace BlazorAppDev.Server.Controllers
 
                 var result = await _userService.Register(request);
 
-                return Ok(result);
+                var response = new RegisterResponse
+                {
+                    Result = true, 
+                };
+
+                return Ok(response);
             }
             catch (Exception e)
             {
@@ -66,41 +67,11 @@ namespace BlazorAppDev.Server.Controllers
             {
                 if(string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password)) return BadRequest("Invalid Parameter");
 
-                UserDetail user = await _userService.Login(request);
+                LoginResponse response = await _userService.Login(request);
 
-                if(user is null) return Unauthorized();
+                if(response is null) return Unauthorized();
 
-                var issuer = _configuration.GetValue<string>("Jwt:Issuer");
-                var audience = _configuration.GetValue<string>("Jwt:Audience");
-                var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("Jwt:Key"));
-
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(new[]
-                    {
-                    //new Claim("Id", Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti,
-                    Guid.NewGuid().ToString())
-                }),
-                    Expires = DateTime.UtcNow.AddSeconds(30),
-                    Issuer = issuer,
-                    Audience = audience,
-                    SigningCredentials = new SigningCredentials
-                    (new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha512Signature)
-                };
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                var jwtToken = tokenHandler.WriteToken(token);
-
-                var result = new LoginResponse
-                {
-                    Token = jwtToken,
-                };
-
-                return Ok(result);
+                return Ok(response);
             }
             catch (Exception e)
             {
@@ -114,6 +85,12 @@ namespace BlazorAppDev.Server.Controllers
         public IActionResult GreetingAuthen()
         {
             _logger.LogInformation("Greeting Log");
+
+            var userEmail = User.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+            var userJti = User.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
+            var userId = User.FindFirst("Id")?.Value;
+            var userCustom = User.FindFirst("MyCustomType")?.Value;
 
             return Ok($"Service Running On {_configuration.GetValue<string>("ASPNETCORE_ENVIRONMENT")}");
         }

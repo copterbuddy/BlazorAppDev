@@ -1,19 +1,26 @@
 ﻿using BlazorAppDev.Server.Repositories.Interfaces;
 using BlazorAppDev.Server.Repositories.MyDb;
 using BlazorAppDev.Server.Repositories.MyDb.Model;
+using System.IdentityModel.Tokens.Jwt;
 using BlazorAppDev.Server.Services.Interfaces;
-using static BlazorAppDev.Client.Pages.Login;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
 
 namespace BlazorAppDev.Server.Services.Implements
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IConfiguration _configuration;
+
         public MyDbContext myDbContext { get; }
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
+            _configuration = configuration;
         }
 
         public async Task<bool> Register(RegisterRequest request)
@@ -39,13 +46,46 @@ namespace BlazorAppDev.Server.Services.Implements
             }
         }
 
-        public async Task<UserDetail> Login(LoginRequest request)
+        public async Task<LoginResponse> Login(LoginRequest request)
         {
             if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password)) return null;
 
             try
             {
-                var result = await _userRepository.Login(request.Email, request.Password);
+                var user = await _userRepository.Login(request.Email, request.Password);
+
+                var issuer = _configuration.GetValue<string>("Jwt:Issuer");
+                var audience = _configuration.GetValue<string>("Jwt:Audience");
+                var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("Jwt:Key"));
+
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new[]
+                    {
+                    //new Claim("Id", Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Jti,
+                    Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Role, user.Role),
+                }),
+                    Expires = DateTime.UtcNow.AddSeconds(30),
+                    Issuer = issuer,
+                    Audience = audience,
+                    SigningCredentials = new SigningCredentials
+                    (new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha512Signature)
+                };
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var jwtToken = tokenHandler.WriteToken(token);
+
+                if(jwtToken is null) return null;
+
+                var result = new LoginResponse
+                {
+                    Token = jwtToken,
+                };
 
                 return result;
             }

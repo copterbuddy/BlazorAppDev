@@ -8,6 +8,6 @@ namespace BlazorAppDev.Shared.Models
 {
     public class RegisterResponse
     {
-        public bool Result;
+        public bool Result { get; set; }
     }
 }

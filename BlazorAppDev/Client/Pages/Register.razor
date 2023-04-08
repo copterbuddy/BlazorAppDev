@@ -9,7 +9,6 @@
 @using Newtonsoft.Json;
 
 @inject IJSRuntime JSRuntime;
-@inject HttpClient Http
 
 <PageTitle>Register</PageTitle>
 
@@ -26,13 +25,13 @@
         <ValidationMessage For="@(() => Model.Email)" />
     </div>
     <div class="mb-3">
-        <label for="password" class="form-label">Email address</label>
-        <input type="password" class="form-control" id="password">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" @bind="@Model.Password">
         <ValidationMessage For="@(() => Model.Password)" />
     </div>
     <div class="mb-3">
-        <label for="confirmpassword" class="form-label">Email address</label>
-        <input type="password" class="form-control" id="confirmpassword">
+        <label for="confirmpassword" class="form-label">Confirm Password</label>
+        <input type="password" class="form-control" id="confirmpassword" @bind="@Model.ConfirmPassword">
         <ValidationMessage For="@(() => Model.ConfirmPassword)" />
 
         <button type="submit" class="btn btn-primary">Register</button>
