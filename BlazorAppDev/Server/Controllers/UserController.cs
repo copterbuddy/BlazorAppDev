@@ -28,7 +28,8 @@ namespace BlazorAppDev.Server.Controllers
         {
             _logger.LogInformation("Greeting Log");
 
-            return Ok($"Service Running On {_configuration.GetValue<string>("ASPNETCORE_ENVIRONMENT")}");
+            string env = _configuration?.GetValue<string>("ASPNETCORE_ENVIRONMENT") ?? string.Empty;
+            return Ok($"Service Running On {env}");
         }
 
         [HttpPost("Register")]
