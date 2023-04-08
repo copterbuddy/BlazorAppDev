@@ -34,6 +34,10 @@ namespace BlazorAppDev.Server.Repositories.MyDb
                 .Property(a => a.LastUpdated)
                 .ValueGeneratedOnAddOrUpdate()
                 .HasDefaultValue(DateTime.Now);
+            modelBuilder.Entity<UserDetail>()
+                .Property(a => a.Role)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValue("USER");
         }
 
         public DbSet<UserDetail> UserDetail { get; set; }

@@ -1,19 +1,20 @@
 ﻿using BlazorAppDev.Server.Repositories.Interfaces;
 using BlazorAppDev.Server.Repositories.MyDb;
+using BlazorAppDev.Server.Repositories.MyDb.Model;
 using BlazorAppDev.Server.Services.Interfaces;
+using static BlazorAppDev.Client.Pages.Login;
 
 namespace BlazorAppDev.Server.Services.Implements
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository userRepository;
+        private readonly IUserRepository _userRepository;
         public MyDbContext myDbContext { get; }
 
         public UserService(IUserRepository userRepository)
         {
-            this.userRepository = userRepository;
+            _userRepository = userRepository;
         }
-
 
         public async Task<bool> Register(RegisterRequest request)
         {
@@ -27,7 +28,7 @@ namespace BlazorAppDev.Server.Services.Implements
                     return false;
                 }
 
-                bool result = await userRepository.Register(Email: request.Email, Password: request.Password);
+                bool result = await _userRepository.Register(Email: request.Email, Password: request.Password);
 
                 return result;
             }
@@ -38,5 +39,21 @@ namespace BlazorAppDev.Server.Services.Implements
             }
         }
 
+        public async Task<UserDetail> Login(LoginRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password)) return null;
+
+            try
+            {
+                var result = await _userRepository.Login(request.Email, request.Password);
+
+                return result;
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
     }
 }

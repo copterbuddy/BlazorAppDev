@@ -1,4 +1,5 @@
-﻿using BlazorAppDev.Server.Services.Implements;
+﻿using BlazorAppDev.Server.Repositories.MyDb.Model;
+using BlazorAppDev.Server.Services.Implements;
 using BlazorAppDev.Server.Services.Interfaces;
 using BlazorAppDev.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -59,46 +60,47 @@ namespace BlazorAppDev.Server.Controllers
         }
 
         [HttpPost("Login")]
-        public IActionResult Login([FromBody]LoginRequest loginModel)
+        public async Task<IActionResult> Login([FromBody]LoginRequest request)
         {
             try
             {
+                if(string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password)) return BadRequest("Invalid Parameter");
 
-                if (loginModel.Email == "test@test.com" && loginModel.Password == "12345678")
+                UserDetail user = await _userService.Login(request);
+
+                if(user is null) return Unauthorized();
+
+                var issuer = _configuration.GetValue<string>("Jwt:Issuer");
+                var audience = _configuration.GetValue<string>("Jwt:Audience");
+                var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("Jwt:Key"));
+
+                var tokenDescriptor = new SecurityTokenDescriptor
                 {
-                    var issuer = _configuration.GetValue<string>("Jwt:Issuer");
-                    var audience = _configuration.GetValue<string>("Jwt:Audience");
-                    var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("Jwt:Key"));
-
-                    var tokenDescriptor = new SecurityTokenDescriptor
+                    Subject = new ClaimsIdentity(new[]
                     {
-                        Subject = new ClaimsIdentity(new[]
-                        {
-                        new Claim("Id", Guid.NewGuid().ToString()),
-                        new Claim(JwtRegisteredClaimNames.Sub, loginModel.Email),
-                        new Claim(JwtRegisteredClaimNames.Email, loginModel.Email),
-                        new Claim(JwtRegisteredClaimNames.Jti,
-                        Guid.NewGuid().ToString())
-                    }),
-                        Expires = DateTime.UtcNow.AddSeconds(30),
-                        Issuer = issuer,
-                        Audience = audience,
-                        SigningCredentials = new SigningCredentials
-                        (new SymmetricSecurityKey(key),
-                        SecurityAlgorithms.HmacSha512Signature)
-                    };
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var token = tokenHandler.CreateToken(tokenDescriptor);
-                    var jwtToken = tokenHandler.WriteToken(token);
+                    //new Claim("Id", Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Jti,
+                    Guid.NewGuid().ToString())
+                }),
+                    Expires = DateTime.UtcNow.AddSeconds(30),
+                    Issuer = issuer,
+                    Audience = audience,
+                    SigningCredentials = new SigningCredentials
+                    (new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha512Signature)
+                };
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var jwtToken = tokenHandler.WriteToken(token);
 
-                    var result = new LoginResponse
-                    {
-                        Token = jwtToken,
-                    };
+                var result = new LoginResponse
+                {
+                    Token = jwtToken,
+                };
 
-                    return Ok(result);
-                }
-                return Unauthorized();
+                return Ok(result);
             }
             catch (Exception e)
             {
