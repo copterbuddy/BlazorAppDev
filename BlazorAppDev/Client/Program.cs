@@ -1,6 +1,5 @@
 using BlazorAppDev.Client;
 using BlazorAppDev.Client.AuthProviders;
-using BlazorAppDev.Shared.ValidatorModels;
 using FluentValidation;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;

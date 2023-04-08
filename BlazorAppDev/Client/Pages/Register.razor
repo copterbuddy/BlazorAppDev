@@ -1,0 +1,45 @@
+﻿@page "/register"
+
+@using FluentValidation;
+@using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations
+@using Blazored.FluentValidation
+@using System.Security.Claims
+@using Newtonsoft.Json;
+
+@inject IJSRuntime JSRuntime;
+@inject HttpClient Http
+
+<PageTitle>Register</PageTitle>
+
+<div>
+    <h1 class="display-3">Register</h1>
+</div>
+<hr />
+<EditForm Model="@Model" OnSubmit="@HandleSubmit">
+    <FluentValidationValidator @ref="_validatorModel" />
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email address</label>
+        <input type="text" class="form-control" id="email" @bind="@Model.Email" placeholder="name@example.com">
+        <ValidationMessage For="@(() => Model.Email)" />
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Email address</label>
+        <input type="password" class="form-control" id="password">
+        <ValidationMessage For="@(() => Model.Password)" />
+    </div>
+    <div class="mb-3">
+        <label for="confirmpassword" class="form-label">Email address</label>
+        <input type="password" class="form-control" id="confirmpassword">
+        <ValidationMessage For="@(() => Model.ConfirmPassword)" />
+
+        <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+</EditForm>
+
+
+
+
+
