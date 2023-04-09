@@ -16,16 +16,19 @@ namespace BlazorAppDev.Server.Repositories.Implements
 
         public async Task<UserDetail> Login(string Email, string Password)
         {
-            UserDetail result = await _myDb.UserDetail.FirstOrDefaultAsync(user => 
-                                                                    user.Email.Equals(Email) == true && 
-                                                                    user.Password.Equals(Password) == true
-                                                                    );
+            UserDetail result = await _myDb.UserDetail.FirstOrDefaultAsync(
+                                user => 
+                                user.Email.Equals(Email) == true && 
+                                user.Password.Equals(Password) == true
+                                );
 
             return result;
         }
 
         public async Task<bool> Register(string Email, string Password)
         {
+            if (Email is null || Password is null) return false;
+
             try
             {
                 UserDetail user = new()
@@ -36,7 +39,7 @@ namespace BlazorAppDev.Server.Repositories.Implements
                 };
                 await _myDb.UserDetail.AddAsync(user);
                 int result = await _myDb.SaveChangesAsync();
-                return result > 0;
+                return true;
             }
             catch (Exception e)
             {
