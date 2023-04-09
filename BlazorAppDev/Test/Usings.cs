@@ -1,1 +1,12 @@
 global using Xunit;
+global using Microsoft.AspNetCore.Mvc.Testing;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.Logging;
+global using Moq;
+global using BlazorAppDev.Server.Repositories.Implements;
+global using BlazorAppDev.Server.Repositories.MyDb;
+global using BlazorAppDev.Server.Controllers;
+global using BlazorAppDev.Server.Services.Interfaces;
+global using BlazorAppDev.Shared.Models;

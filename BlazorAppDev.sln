@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppDev.Shared", "Blaz
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EBCB52EA-CF09-4FA4-A7CB-88F560D4F6B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorAppDev.Test", "BlazorAppDev\Test\BlazorAppDev.Test.csproj", "{ECD88477-414B-485C-8322-89B6B529F7C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppDev.Test", "BlazorAppDev\Test\BlazorAppDev.Test.csproj", "{ECD88477-414B-485C-8322-89B6B529F7C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
