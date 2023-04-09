@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 using Moq;
 using BlazorAppDev.Shared.Models;
 
-namespace BlazorAppDev.Test.Client.Controllers
+namespace BlazorAppDev.Test.Server.Controllers
 {
-    public class UserControllerTest : IDisposable
+    public class UserControllerTest
     {
         UserController controller;
 
@@ -33,12 +33,6 @@ namespace BlazorAppDev.Test.Client.Controllers
             var configMock = configuration;
             var userServiceMock = new Mock<IUserService>();
             controller = new UserController(loggerMock.Object, configMock, userServiceMock.Object);
-        }
-
-        // teardown
-        public void Dispose()
-        {
-            // Dispose here
         }
 
         #region User/Greeting
