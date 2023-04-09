@@ -12,13 +12,14 @@ using Moq;
 
 namespace BlazorAppDev.Test.Client.Controllers
 {
-    public class UserControllerTest
+    public class UserControllerTest : IDisposable
     {
-        [Fact]
-        public void Get_ReturnsOkObjectResult()
+        UserController controller;
+
+        // setup
+        public UserControllerTest()
         {
-            // Arrange
-            var inMemorySettings = new Dictionary<string, string> 
+            var inMemorySettings = new Dictionary<string, string>
             {
                 {"ASPNETCORE_ENVIRONMENT", "Development"},
                 {"SectionName:SomeKey", "SectionValue"},
@@ -30,7 +31,19 @@ namespace BlazorAppDev.Test.Client.Controllers
             var loggerMock = new Mock<ILogger<UserController>>();
             var configMock = configuration;
             var userServiceMock = new Mock<IUserService>();
-            var controller = new UserController(loggerMock.Object, configMock, userServiceMock.Object);
+            controller = new UserController(loggerMock.Object, configMock, userServiceMock.Object);
+        }
+
+        // teardown
+        public void Dispose()
+        {
+            // Dispose here
+        }
+
+        [Fact]
+        public void Get_ReturnsOkObjectResult()
+        {
+            // Arrange
 
             // Act
             var result = controller.Get();
@@ -43,20 +56,6 @@ namespace BlazorAppDev.Test.Client.Controllers
         public void Get_ReturnsExpectedValue()
         {
             // Arrange
-            var inMemorySettings = new Dictionary<string, string>
-            {
-                {"ASPNETCORE_ENVIRONMENT", "Development"},
-                {"SectionName:SomeKey", "SectionValue"},
-            };
-
-            IConfiguration configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(inMemorySettings)
-                .Build();
-
-            var loggerMock = new Mock<ILogger<UserController>>();
-            var configMock = configuration;
-            var userServiceMock = new Mock<IUserService>();
-            var controller = new UserController(loggerMock.Object, configMock, userServiceMock.Object);
             var expectedValue = "Service Running On Development";
 
             // Act
