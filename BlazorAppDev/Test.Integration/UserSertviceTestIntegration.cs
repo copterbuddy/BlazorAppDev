@@ -11,59 +11,56 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Testcontainers.MsSql;
+using BlazorAppDev.Shared.Models;
+using System.Net.Http.Json;
+using CuratedArt.IntegrationTests.Setup;
+using BlazorAppDev.Test.Integration.Creators;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using DotNet.Testcontainers.Containers;
 
 namespace Test.Integration;
 
-public class UserServiceTestIntegration : IAsyncLifetime
+public class UserServiceTestIntegration : IntegrationTestBase
 {
-    private readonly MsSqlContainer _msSqlContainer = new MsSqlBuilder().Build();
+    private readonly IntegrationTestFactory<Program, MyDbContext> _integrationTestFactory;
+    private readonly UserCreators _userCreators;
 
-    Task IAsyncLifetime.InitializeAsync()
+    public UserServiceTestIntegration(IntegrationTestFactory<Program, MyDbContext> factory) : base(factory)
     {
-        return _msSqlContainer.StartAsync();
-    }
-
-    Task IAsyncLifetime.DisposeAsync()
-    {
-        return _msSqlContainer.DisposeAsync().AsTask();
+        _integrationTestFactory = factory;
+        var scope = factory.Services.CreateScope();
+        _userCreators = scope.ServiceProvider.GetRequiredService<UserCreators>();
     }
 
     [Fact]
     public async Task GreetingService()
     {
-        var webAppFacotry = new WebApplicationFactory<Program>();
-        var httpClient = webAppFacotry.CreateDefaultClient();
+        //var webAppFacotry = new WebApplicationFactory<Program>();
+        var _client = _integrationTestFactory.CreateDefaultClient();
 
-        var response = await httpClient.GetAsync("/User/Greeting");
+        var response = await _client.GetAsync("/User/Greeting");
         var stringResult = await response.Content.ReadAsStringAsync();
 
         Assert.Equal("Service Running On ", stringResult);
     }
 
     [Fact]
-    public void ConnectionStateReturnsOpen()
+    public async Task RegisterService()
     {
-        // Given
-        using DbConnection connection = new SqlConnection(_msSqlContainer.GetConnectionString());
+        var _client = _integrationTestFactory.CreateDefaultClient();
 
-        // When
-        connection.Open();
+        var request = new RegisterRequest
+        {
+            Email = "test@example.com",
+            Password = "password",
+            ConfirmPassword = "password"
+        };
 
-        // Then
-        Assert.Equal(ConnectionState.Open, connection.State);
-    }
+        var resp = await _client.PostAsJsonAsync("/User/Register", request);
+        RegisterResponse respObj = await resp.Content.ReadFromJsonAsync<RegisterResponse>();
 
-    [Fact]
-    public async Task ExecScriptReturnsSuccessful()
-    {
-        // Given
-        const string scriptContent = "SELECT 1;";
-
-        // When
-        var execResult = await _msSqlContainer.ExecScriptAsync(scriptContent)
-            .ConfigureAwait(false);
-
-        // When
-        Assert.True(0L.Equals(execResult.ExitCode), execResult.Stderr);
+        Assert.True(resp.IsSuccessStatusCode);
+        Assert.True(respObj.Result);
     }
 }
