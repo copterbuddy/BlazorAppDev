@@ -15,7 +15,7 @@ namespace BlazorAppDev
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +53,20 @@ namespace BlazorAppDev
             });
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                // TODO: need to add check here to only run migrations if it was applicable
+                var db = scope.ServiceProvider.GetRequiredService<MyDbContext>();
+                await db.Database.MigrateAsync();
+
+                //var seeder = new SeedArtWorks(db);
+
+                //if (!db.ArtWorks.Any())
+                //{
+                //    await seeder.Seed();
+                //}
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
