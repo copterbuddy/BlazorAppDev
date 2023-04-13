@@ -6,6 +6,7 @@ namespace BlazorAppDev.Server.Repositories.MyDb
 {
     public class MyDbContext : DbContext
     {
+        private readonly IConfiguration _configuration;
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
         }

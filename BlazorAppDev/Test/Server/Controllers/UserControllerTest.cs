@@ -1,4 +1,17 @@
-﻿namespace BlazorAppDev.Test.Server.Controllers
+﻿using BlazorAppDev.Server.Controllers;
+using BlazorAppDev.Server.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Moq;
+using BlazorAppDev.Shared.Models;
+
+namespace BlazorAppDev.Test.Server.Controllers
 {
     public class UserControllerTest
     {

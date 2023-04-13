@@ -1,4 +1,14 @@
-﻿namespace BlazorAppDev.Test.Server.Repositories
+﻿using BlazorAppDev.Server.Repositories.Implements;
+using BlazorAppDev.Server.Repositories.MyDb;
+using BlazorAppDev.Server.Repositories.MyDb.Model;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BlazorAppDev.Test.Server.Repositories
 {
     public class UserRepositoryTest : IDisposable
     {
