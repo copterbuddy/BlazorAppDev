@@ -49,7 +49,6 @@ public class IntegrationTestFactory<TProgram, TDbContext> : WebApplicationFactor
         await _container.StartAsync();
         await InitialDbScript();
 
-
     }
 
     public new async Task DisposeAsync() => await _container.DisposeAsync();
