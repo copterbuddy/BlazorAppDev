@@ -45,7 +45,7 @@ jobs:
       run: pwd
     
     - name: Build the Docker image
-      run: docker build ./BlazorAppDev/Server --file Dockerfile --tag blazorappdev-image:${{ env.GITHUB_SHA }}
+      run: docker build ./Server --file Dockerfile --tag blazorappdev-image:${{ env.GITHUB_SHA }}
 
 #     - name: Buildx
 #       id: buildx
