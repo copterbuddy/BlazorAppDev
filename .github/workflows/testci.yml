@@ -11,7 +11,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./BlazorAppDev/Server
+    working-directory: .
 
 jobs:
   docker:
@@ -34,6 +34,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./Dockerfile
+          file: BlazorAppDev/Server/Dockerfile
           push: true
           tags: copterbuddy/blazorappdev:latest
