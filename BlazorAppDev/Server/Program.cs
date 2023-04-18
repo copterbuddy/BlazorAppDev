@@ -24,7 +24,7 @@ namespace BlazorAppDev
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
 
-            string connectionString = builder.Configuration.GetValue<string>("ConnectionStrings_DefaultConnection");
+            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<MyDbContext>(options =>
             options.UseSqlServer(connectionString));
             //builder.Services.AddDbContext<MyDbContext>();

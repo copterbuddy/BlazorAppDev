@@ -10,11 +10,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppDev.Shared", "BlazorAppDev\Shared\BlazorAppDev.Shared.csproj", "{D3C15948-CD28-41B8-B1C3-B8CD0E6F9734}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EBCB52EA-CF09-4FA4-A7CB-88F560D4F6B4}"
-	ProjectSection(SolutionItems) = preProject
-		docker-db-init.sh = docker-db-init.sh
-		docker-entrypoint.sh = docker-entrypoint.sh
-		mssql-blazor_db.sql = mssql-blazor_db.sql
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppDev.Test", "BlazorAppDev\Test\BlazorAppDev.Test.csproj", "{ECD88477-414B-485C-8322-89B6B529F7C1}"
 EndProject

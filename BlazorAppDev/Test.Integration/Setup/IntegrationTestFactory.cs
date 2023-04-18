@@ -40,8 +40,7 @@ public class IntegrationTestFactory<TProgram, TDbContext> : WebApplicationFactor
 
         scripts.ForEach(async script =>
         {
-            await _container.ExecScriptAsync(script)
-            .ConfigureAwait(false);
+            await _container.ExecScriptAsync(script);
         });
     }
 
