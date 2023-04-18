@@ -34,13 +34,15 @@ jobs:
   build-and-push-docker-image:
     name: Build Docker image and push to repositories
     runs-on: ubuntu-20.04
-    needs: testing
+#    needs: testing
     
     steps:
     - uses: actions/checkout@v3
     
     - name: Setup SHA
       run: echo "GITHUB_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
+    - name: check current
+      run: pwd
     
     - name: Build the Docker image
       run: docker build ./BlazorAppDev/Server --file Dockerfile --tag blazorappdev-image:${{ env.GITHUB_SHA }}
