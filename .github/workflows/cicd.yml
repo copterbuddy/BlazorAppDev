@@ -10,7 +10,7 @@ jobs:
   # ==============
   # CI task
   # ==============
-  Testing:
+  testing:
 
     runs-on: ubuntu-20.04
 
@@ -34,7 +34,7 @@ jobs:
   build-and-push-docker-image:
     name: Build Docker image and push to repositories
     runs-on: ubuntu-20.04
-    needs: Testing
+    needs: testing
     
     steps:
     - name: Setup SHA
