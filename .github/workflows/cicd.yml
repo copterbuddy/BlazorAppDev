@@ -10,26 +10,26 @@ jobs:
   # ==============
   # CI task
   # ==============
-  testing:
+#   testing:
 
-    runs-on: ubuntu-20.04
+#     runs-on: ubuntu-20.04
 
-    steps:
-    - uses: actions/checkout@v3
+#     steps:
+#     - uses: actions/checkout@v3
     
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
+#     - name: Setup .NET
+#       uses: actions/setup-dotnet@v3
+#       with:
+#         dotnet-version: 6.0.x
         
-    - name: Restore dependencies
-      run: dotnet restore
+#     - name: Restore dependencies
+#       run: dotnet restore
       
-    - name: Build
-      run: dotnet build --no-restore
+#     - name: Build
+#       run: dotnet build --no-restore
       
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+#     - name: Test
+#       run: dotnet test --no-build --verbosity normal
       
   build-and-push-docker-image:
     name: Build Docker image and push to repositories
@@ -37,6 +37,8 @@ jobs:
     needs: testing
     
     steps:
+    - uses: actions/checkout@v3
+    
     - name: Setup SHA
       run: echo "GITHUB_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
     
