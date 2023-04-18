@@ -40,12 +40,12 @@ jobs:
     - name: Setup SHA
       run: echo "GITHUB_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
     
-#     - name: Build the Docker image
-#       run: docker build ./BlazorAppDev/Server --file Dockerfile --tag blazorappdev-image:${{ env.GITHUB_SHA }}
+    - name: Build the Docker image
+      run: docker build ./BlazorAppDev/Server --file Dockerfile --tag blazorappdev-image:${{ env.GITHUB_SHA }}
 
-    - name: Buildx
-      id: buildx
-      uses: docker/setup-buildx-action@v1
+#     - name: Buildx
+#       id: buildx
+#       uses: docker/setup-buildx-action@v1
       
     - name: DockerHub login
       uses: docker/login-action@v1
@@ -57,4 +57,4 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: copterbuddy/blazorappdev:latest
+        tags: copterbuddy/blazorappdev:${{ env.GITHUB_SHA }}
