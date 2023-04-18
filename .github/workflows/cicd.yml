@@ -7,8 +7,10 @@ on:
     branches: [ "main" ]
 
 jobs:
-
-  build:
+  # ==============
+  # CI task
+  # ==============
+  Testing:
 
     runs-on: ubuntu-20.04
 
@@ -22,13 +24,37 @@ jobs:
         
     - name: Restore dependencies
       run: dotnet restore
+      
     - name: Build
       run: dotnet build --no-restore
+      
     - name: Test
       run: dotnet test --no-build --verbosity normal
+      
+  build-and-push-docker-image:
+    name: Build Docker image and push to repositories
+    runs-on: ubuntu-20.04
+    needs: Testing
     
-#     - name: Setup SHA
-#       run: echo "GITHUB_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
+    steps:
+    - name: Setup SHA
+      run: echo "GITHUB_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
     
 #     - name: Build the Docker image
 #       run: docker build ./BlazorAppDev/Server --file Dockerfile --tag blazorappdev-image:${{ env.GITHUB_SHA }}
+
+    - name: Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v1
+      
+    - name: DockerHub login
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: copterbuddy/blazorappdev:latest
