@@ -1,4 +1,4 @@
-name: Deploy to Amazon ECS
+name: test_cd
 on:
   push:
     branches: ["main"]
@@ -11,7 +11,7 @@ env:
   CONTAINER_NAME: blazorappdev
   CONTAINER_VERSION: copterbuddy/blazorappdev:latest
   ECS_SERVICE: app_service
-  ECS_TD: ./github/td.json
+  ECS_TD: .github/workflows/td.json
 
 jobs:
   deploy:
