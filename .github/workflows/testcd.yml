@@ -1,0 +1,38 @@
+name: Deploy to Amazon ECS
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+env:
+  AWS_REGION: ap-southeast-1
+  ECS_CLUSTER: app_cluster
+  CONTAINER_NAME: blazorappdev
+  CONTAINER_VERSION: copterbuddy/blazorappdev:latest
+  ECS_SERVICE: app_service
+  ECS_TD: ./github/workflows/td.json
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        users: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secret.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secret.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def-1
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TD }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ env.CONTAINER_VERSION }}
