@@ -26,8 +26,7 @@ namespace BlazorAppDev
 
             string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<MyDbContext>(options =>
-            options.UseSqlServer(connectionString));
-            //builder.Services.AddDbContext<MyDbContext>();
+            options.UseNpgsql(connectionString));
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
@@ -56,16 +55,8 @@ namespace BlazorAppDev
 
             using (var scope = app.Services.CreateScope())
             {
-                // TODO: need to add check here to only run migrations if it was applicable
                 var db = scope.ServiceProvider.GetRequiredService<MyDbContext>();
                 await db.Database.MigrateAsync();
-
-                //var seeder = new SeedArtWorks(db);
-
-                //if (!db.ArtWorks.Any())
-                //{
-                //    await seeder.Seed();
-                //}
             }
 
             // Configure the HTTP request pipeline.

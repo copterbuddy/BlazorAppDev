@@ -3,7 +3,7 @@
     public class BaseModel
     {
         public Guid Id { get; set; }
-        public DateTime? CreateDate { get; set; }
-        public DateTime? LastUpdated { get; set; }
+        public DateTimeOffset? CreateDate { get; set; }
+        public DateTimeOffset? LastUpdated { get; set; }
     }
 }

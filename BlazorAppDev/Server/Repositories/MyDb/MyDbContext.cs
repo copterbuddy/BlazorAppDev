@@ -28,11 +28,11 @@ namespace BlazorAppDev.Server.Repositories.MyDb
             modelBuilder.Entity<UserDetail>()
                 .Property(p => p.CreateDate)
                 .ValueGeneratedOnAdd()
-                .HasDefaultValue(DateTime.Now);
+                .HasDefaultValue(DateTimeOffset.Now);
             modelBuilder.Entity<UserDetail>()
                 .Property(a => a.LastUpdated)
                 .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValue(DateTime.Now);
+                .HasDefaultValue(DateTimeOffset.Now);
             modelBuilder.Entity<UserDetail>()
                 .Property(a => a.Role)
                 .ValueGeneratedOnAddOrUpdate()

@@ -9,15 +9,16 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.MsSql;
+using Testcontainers.PostgreSql;
 
 public class IntegrationTestFactory<TProgram, TDbContext> : WebApplicationFactory<TProgram>, IAsyncLifetime
     where TProgram : class where TDbContext : DbContext
 {
-    private readonly MsSqlContainer _container;
+    private readonly PostgreSqlContainer _container;
 
     public IntegrationTestFactory()
     {
-        _container = new MsSqlBuilder().Build();
+        _container = new PostgreSqlBuilder().Build();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -25,7 +26,7 @@ public class IntegrationTestFactory<TProgram, TDbContext> : WebApplicationFactor
         builder.ConfigureTestServices(services =>
         {
             services.RemoveDbContext<TDbContext>();
-            services.AddDbContext<TDbContext>(options => { options.UseSqlServer(_container.GetConnectionString()); });
+            services.AddDbContext<TDbContext>(options => { options.UseNpgsql(_container.GetConnectionString()); });
             services.AddTransient<UserCreators>();
         });
     }

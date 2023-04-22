@@ -1,7 +1,6 @@
 ﻿using BlazorAppDev;
 using BlazorAppDev.Server.Repositories.MyDb;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
