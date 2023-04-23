@@ -1,5 +1,5 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:ap-southeast-1:024763395437:task-definition/blazorappdev:9",
+    "taskDefinitionArn": "arn:aws:ecs:ap-southeast-1:024763395437:task-definition/blazorappdev:13",
     "containerDefinitions": [
         {
             "name": "blazorappdev",
@@ -28,7 +28,7 @@
     "taskRoleArn": "arn:aws:iam::024763395437:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::024763395437:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "revision": 9,
+    "revision": 13,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
