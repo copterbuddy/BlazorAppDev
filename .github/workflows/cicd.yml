@@ -68,6 +68,7 @@ jobs:
           tags: copterbuddy/blazorappdev:latest
           
   deploy-to-aws:
+    needs: build-and-push-docker-image
     name: Deploy
     runs-on: ubuntu-latest
     environment: dev
