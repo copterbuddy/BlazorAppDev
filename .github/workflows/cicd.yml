@@ -5,6 +5,14 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+    
+env:
+  AWS_REGION: ap-southeast-1
+  ECS_CLUSTER: app_cluster
+  CONTAINER_NAME: blazorappdev
+  CONTAINER_VERSION: copterbuddy/blazorappdev:latest
+  ECS_SERVICE: app_service
+  ECS_TD: .github/workflows/td.json
 
 jobs:
   # ==============
@@ -32,33 +40,59 @@ jobs:
 #       run: dotnet test --no-build --verbosity normal
       
   build-and-push-docker-image:
-    name: Build Docker image and push to repositories
-    runs-on: ubuntu-20.04
 #    needs: testing
-    
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup SHA
-      run: echo "GITHUB_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
-    - name: check current
-      run: pwd
-    
-    - name: Build the Docker image
-      run: docker build ./Server --file Dockerfile --tag blazorappdev-image:${{ env.GITHUB_SHA }}
+      - 
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: copterbuddy/blazorappdev:latest
+          
+  deploy-to-aws:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-#     - name: Buildx
-#       id: buildx
-#       uses: docker/setup-buildx-action@v1
-      
-    - name: DockerHub login
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-        
-    - name: Build and push
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: copterbuddy/blazorappdev:${{ env.GITHUB_SHA }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def-1
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TD }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ env.CONTAINER_VERSION }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def-1.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
