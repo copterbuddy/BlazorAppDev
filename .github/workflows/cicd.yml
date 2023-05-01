@@ -62,7 +62,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./BlazorAppDev/Server
           file: ./Dockerfile
           push: true
           tags: copterbuddy/blazorappdev:latest
