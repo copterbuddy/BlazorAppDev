@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
 using System.Text;
 
 namespace BlazorAppDev
@@ -23,6 +26,27 @@ namespace BlazorAppDev
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+
+            var levelSwitch = new Serilog.Core.LoggingLevelSwitch();
+            var logger = new LoggerConfiguration()
+                .MinimumLevel.ControlledBy(levelSwitch)
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.WithProperty("InstanceId", Guid.NewGuid().ToString("n"))
+                .Enrich.FromLogContext()
+                .WriteTo.Console(
+                outputTemplate: "{Timestamp:HH:mm} [{Level}] ({ThreadId}) {Message}{NewLine}{Exception}",
+                theme: AnsiConsoleTheme.Code,
+                restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information
+                )
+                .WriteTo.Debug(
+                outputTemplate: "{Timestamp:HH:mm} [{Level}] ({ThreadId}) {Message}{NewLine}{Exception}",
+                restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information
+                )
+                .Filter.ByExcluding(e => e.MessageTemplate.Text.Contains("_framework"))
+                .CreateLogger();
+            //builder.Logging.ClearProviders();
+            builder.Logging.AddSerilog(logger);
 
             string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<MyDbContext>(options =>
@@ -50,6 +74,7 @@ namespace BlazorAppDev
                     ValidateIssuerSigningKey = true
                 };
             });
+
 
             var app = builder.Build();
 
