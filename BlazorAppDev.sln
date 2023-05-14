@@ -3,17 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppDev.Server", "BlazorAppDev\Server\BlazorAppDev.Server.csproj", "{C5910692-88B9-4049-A807-ECB864D7AEDE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppDev.Client", "BlazorAppDev\Client\BlazorAppDev.Client.csproj", "{144A3594-8108-49B5-86F6-430BE26C3618}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppDev.Shared", "BlazorAppDev\Shared\BlazorAppDev.Shared.csproj", "{D3C15948-CD28-41B8-B1C3-B8CD0E6F9734}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EBCB52EA-CF09-4FA4-A7CB-88F560D4F6B4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppDev.Test", "BlazorAppDev\Test\BlazorAppDev.Test.csproj", "{ECD88477-414B-485C-8322-89B6B529F7C1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppDev.Test.Integration", "BlazorAppDev\Test.Integration\BlazorAppDev.Test.Integration.csproj", "{AFFF52BF-DE0B-4CAC-A050-E40367711E17}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		Dockerfile = Dockerfile
+		nginx.conf = nginx.conf
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,26 +18,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C5910692-88B9-4049-A807-ECB864D7AEDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C5910692-88B9-4049-A807-ECB864D7AEDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C5910692-88B9-4049-A807-ECB864D7AEDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C5910692-88B9-4049-A807-ECB864D7AEDE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{144A3594-8108-49B5-86F6-430BE26C3618}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{144A3594-8108-49B5-86F6-430BE26C3618}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{144A3594-8108-49B5-86F6-430BE26C3618}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{144A3594-8108-49B5-86F6-430BE26C3618}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D3C15948-CD28-41B8-B1C3-B8CD0E6F9734}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D3C15948-CD28-41B8-B1C3-B8CD0E6F9734}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D3C15948-CD28-41B8-B1C3-B8CD0E6F9734}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D3C15948-CD28-41B8-B1C3-B8CD0E6F9734}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ECD88477-414B-485C-8322-89B6B529F7C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ECD88477-414B-485C-8322-89B6B529F7C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ECD88477-414B-485C-8322-89B6B529F7C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ECD88477-414B-485C-8322-89B6B529F7C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AFFF52BF-DE0B-4CAC-A050-E40367711E17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AFFF52BF-DE0B-4CAC-A050-E40367711E17}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AFFF52BF-DE0B-4CAC-A050-E40367711E17}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AFFF52BF-DE0B-4CAC-A050-E40367711E17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
